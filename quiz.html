@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #667eea;
+            font-family: Arial, sans-serif;
+        }
+
+        .quiz {
+            width: 600px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        #question {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .answer {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .answer:hover {
+            background: #f0f0f0;
+        }
+
+        #next {
+            width: 100%;
+            padding: 13px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        #next:hover {
+            background: #5568d8;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="quiz">
+
+    <h1>Quiz App</h1>
+
+    <div id="quizBox">
+
+        <h2 id="question"></h2>
+
+        <div id="answers"></div>
+
+        <button id="next">Keyingi</button>
+
+    </div>
+
+    <div id="result" class="hidden"></div>
+
+</div>
+
+<script>
+
+    const questions = [
+        {
+            question: "HTML nimani anglatadi?",
+            answers: [
+                "Hyper Text Markup Language",
+                "High Text Machine Language",
+                "Hyper Tool Multi Language",
+                "Home Text Markup Language"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "CSS nima uchun ishlatiladi?",
+            answers: [
+                "Database yaratish",
+                "Sahifani bezash",
+                "Server yaratish",
+                "Ma'lumot saqlash"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "JavaScriptda o'zgaruvchi e'lon qilish uchun qaysi keyword ishlatiladi?",
+            answers: [
+                "var",
+                "style",
+                "html",
+                "css"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Array yaratish uchun qaysi belgilar ishlatiladi?",
+            answers: [
+                "{}",
+                "()",
+                "[]",
+                "<>"
+            ],
+            correct: 2
+        },
+
+        {
+            question: "DOM nimani boshqarishga imkon beradi?",
+            answers: [
+                "HTML elementlarini",
+                "Kompyuter protsessorini",
+                "Internet tezligini",
+                "Operatsion sistemani"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Qaysi metod array oxiriga element qo'shadi?",
+            answers: [
+                "pop()",
+                "push()",
+                "shift()",
+                "remove()"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Qaysi metod array oxiridagi elementni olib tashlaydi?",
+            answers: [
+                "push()",
+                "add()",
+                "pop()",
+                "delete()"
+            ],
+            correct: 2
+        },
+
+        {
+            question: "setInterval() nima qiladi?",
+            answers: [
+                "Funksiyani belgilangan vaqtda takrorlaydi",
+                "HTMLni o'chiradi",
+                "CSS yaratadi",
+                "Arrayni o'chiradi"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "localStorage ma'lumotni qayerda saqlaydi?",
+            answers: [
+                "Database serverda",
+                "Brauzerda",
+                "CSS faylida",
+                "HTML tagida"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "JavaScriptda shart operatori qaysi?",
+            answers: [
+                "if",
+                "for",
+                "function",
+                "array"
+            ],
+            correct: 0
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionElement = document.getElementById("question");
+    const answersElement = document.getElementById("answers");
+    const nextButton = document.getElementById("next");
+    const quizBox = document.getElementById("quizBox");
+    const result = document.getElementById("result");
+
+    function showQuestion() {
+
+        const question = questions[currentQuestion];
+
+        questionElement.textContent = question.question;
+
+        answersElement.innerHTML = "";
+
+        question.answers.forEach(function(answer, index) {
+
+            const button = document.createElement("button");
+
+            button.textContent = answer;
+            button.classList.add("answer");
+
+            button.addEventListener("click", function() {
+
+                if (index === question.correct) {
+                    score++;
+                }
+
+                const buttons = document.querySelectorAll(".answer");
+
+                buttons.forEach(function(button) {
+                    button.disabled = true;
+                });
+            });
+
+            answersElement.appendChild(button);
+        });
+    }
+
+    nextButton.addEventListener("click", function() {
+
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+
+            showQuestion();
+
+        } else {
+
+            showResult();
+
+        }
+    });
+
+    function showResult() {
+
+        quizBox.classList.add("hidden");
+        result.classList.remove("hidden");
+
+        const percentage =
+            Math.round((score / questions.length) * 100);
+
+        result.textContent =
+            "Natija: " + score + "/" + questions.length +
+            " | " + percentage + "%";
+    }
+
+    showQuestion();
+
+</script>
+
+</body>
+</html>

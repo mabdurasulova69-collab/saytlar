@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark / Light Mode</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+            transition: 0.3s;
+        }
+
+        .container {
+            width: 400px;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: 1s;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        body.dark {
+            background: #111827;
+            color: white;
+        }
+
+        body.dark .container {
+            background: #1f2937;
+            color: white;
+        }
+
+        body.dark button {
+            background: #f59e0b;
+            color: #111;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 id="title">Light Mode ☀️</h1>
+
+        <p>
+            Rejimni almashtirish uchun quyidagi tugmani bosing.
+        </p>
+
+        <button id="modeButton">
+            🌙 Dark Mode
+        </button>
+    </div>
+
+    <script>
+        const body = document.body;
+        const modeButton = document.getElementById("modeButton");
+        const title = document.getElementById("title");
+
+        function updateMode() {
+            if (body.classList.contains("dark")) {
+                title.textContent = "Dark Mode 🌙";
+                modeButton.textContent = "☀️ Light Mode";
+            } else {
+                title.textContent = "Light Mode ☀️";
+                modeButton.textContent = "🌙 Dark Mode";
+            }
+        }
+
+        if (localStorage.getItem("mode") === "dark") {
+            body.classList.add("dark");
+        }
+
+        updateMode();
+
+        modeButton.addEventListener("click", function() {
+            body.classList.toggle("dark");
+
+            if (body.classList.contains("dark")) {
+                localStorage.setItem("mode", "dark");
+            } else {
+                localStorage.setItem("mode", "light");
+            }
+
+            updateMode();
+        });
+    </script>
+
+</body>
+</html>

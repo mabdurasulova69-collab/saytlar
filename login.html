@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .form-box {
+            width: 400px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-box h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .input-box {
+            margin-bottom: 18px;
+        }
+
+        .input-box label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .input-box input:focus {
+            border-color: #667eea;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .success {
+            color: #27ae60;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #5568d8;
+        }
+
+        @media (max-width: 450px) {
+            .form-box {
+                width: 90%;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="form-box">
+
+    <h1>Registratsiya</h1>
+
+    <form id="registerForm">
+
+        <div class="input-box">
+            <label for="login">Login</label>
+            <input type="text" id="login" placeholder="Login kiriting">
+            <span class="error" id="loginError"></span>
+        </div>
+
+        <div class="input-box">
+            <label for="email">Email</label>
+            <input type="text" id="email" placeholder="Email kiriting">
+            <span class="error" id="emailError"></span>
+        </div>
+
+        <div class="input-box">
+            <label for="password">Parol</label>
+            <input type="password" id="password" placeholder="Parol kiriting">
+            <span class="error" id="passwordError"></span>
+        </div>
+
+        <div class="input-box">
+            <label for="confirmPassword">Parolni tasdiqlang</label>
+            <input type="password" id="confirmPassword" placeholder="Parolni qayta kiriting">
+            <span class="error" id="confirmPasswordError"></span>
+        </div>
+
+        <p class="success" id="success"></p>
+
+        <button type="submit">Ro'yxatdan o'tish</button>
+
+    </form>
+
+</div>
+
+<script>
+    const form = document.getElementById("registerForm");
+
+    form.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const login = document.getElementById("login").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        const loginError = document.getElementById("loginError");
+        const emailError = document.getElementById("emailError");
+        const passwordError = document.getElementById("passwordError");
+        const confirmPasswordError = document.getElementById("confirmPasswordError");
+        const success = document.getElementById("success");
+
+        loginError.textContent = "";
+        emailError.textContent = "";
+        passwordError.textContent = "";
+        confirmPasswordError.textContent = "";
+        success.textContent = "";
+
+        let isValid = true;
+
+        if (login === "") {
+            loginError.textContent = "Login kiriting!";
+            isValid = false;
+        }
+
+        if (email === "") {
+            emailError.textContent = "Email kiriting!";
+            isValid = false;
+        } else if (!email.includes("@")) {
+            emailError.textContent = "Email noto'g'ri!";
+            isValid = false;
+        }
+
+        if (password === "") {
+            passwordError.textContent = "Parol kiriting!";
+            isValid = false;
+        } else if (password.length < 6) {
+            passwordError.textContent = "Parol kamida 6 ta belgidan iborat bo'lsin!";
+            isValid = false;
+        }
+
+        if (confirmPassword === "") {
+            confirmPasswordError.textContent = "Parolni tasdiqlang!";
+            isValid = false;
+        } else if (password !== confirmPassword) {
+            confirmPasswordError.textContent = "Parollar bir xil emas!";
+            isValid = false;
+        }
+
+        if (isValid) {
+            success.textContent = "Ro'yxatdan o'tish muvaffaqiyatli!";
+            form.reset();
+        }
+    });
+</script>
+
+</body>
+</html>

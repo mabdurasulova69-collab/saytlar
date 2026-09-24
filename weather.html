@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #38bdf8, #2563eb);
+            padding: 20px;
+        }
+
+        .weather-app {
+            width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .weather {
+            text-align: center;
+            background: #eff6ff;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .weather h2 {
+            margin-bottom: 15px;
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .temperature {
+            font-size: 45px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .info div {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .error {
+            text-align: center;
+            color: #ef4444;
+            font-weight: bold;
+            padding: 20px;
+        }
+
+        .welcome {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="weather-app">
+
+        <h1>🌤️ Weather App</h1>
+
+        <form id="weatherForm">
+
+            <input
+                type="text"
+                id="cityInput"
+                placeholder="Shahar nomini kiriting..."
+            >
+
+            <button type="submit">
+                Qidirish
+            </button>
+
+        </form>
+
+        <div id="weatherResult">
+            <p class="welcome">
+                Shahar nomini kiriting
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        const weatherData = {
+            toshkent: {
+                city: "Toshkent",
+                temperature: 28,
+                description: "Quyoshli",
+                humidity: 40,
+                wind: 12,
+                icon: "☀️"
+            },
+
+            samarqand: {
+                city: "Samarqand",
+                temperature: 25,
+                description: "Bulutli",
+                humidity: 50,
+                wind: 10,
+                icon: "⛅"
+            },
+
+            buxoro: {
+                city: "Buxoro",
+                temperature: 30,
+                description: "Issiq",
+                humidity: 35,
+                wind: 8,
+                icon: "🌞"
+            },
+
+            andijon: {
+                city: "Andijon",
+                temperature: 27,
+                description: "Qisman bulutli",
+                humidity: 45,
+                wind: 9,
+                icon: "🌤️"
+            },
+
+            fargona: {
+                city: "Farg'ona",
+                temperature: 26,
+                description: "Bulutli",
+                humidity: 48,
+                wind: 11,
+                icon: "☁️"
+            }
+        };
+
+        const weatherForm = document.getElementById("weatherForm");
+        const cityInput = document.getElementById("cityInput");
+        const weatherResult = document.getElementById("weatherResult");
+
+        weatherForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const city = cityInput.value
+                .toLowerCase()
+                .trim();
+
+            if (city === "") {
+                weatherResult.innerHTML = `
+                    <p class="error">
+                        Shahar nomini kiriting!
+                    </p>
+                `;
+
+                return;
+            }
+
+            const weather = weatherData[city];
+
+            if (weather) {
+
+                weatherResult.innerHTML = `
+                    <div class="weather">
+
+                        <h2>${weather.city}</h2>
+
+                        <div class="icon">
+                            ${weather.icon}
+                        </div>
+
+                        <div class="temperature">
+                            ${weather.temperature}°C
+                        </div>
+
+                        <p class="description">
+                            ${weather.description}
+                        </p>
+
+                        <div class="info">
+
+                            <div>
+                                <strong>💧</strong>
+                                <span>${weather.humidity}%</span>
+                                <small>Namlik</small>
+                            </div>
+
+                            <div>
+                                <strong>💨</strong>
+                                <span>${weather.wind} km/h</span>
+                                <small>Shamol</small>
+                            </div>
+
+                        </div>
+
+                    </div>
+                `;
+
+            } else {
+
+                weatherResult.innerHTML = `
+                    <p class="error">
+                             Bu shahar haqida ma'lumot topilmadi.
+                    </p>
+                `;
+
+            }
+        });
+    </script>
+
+</body>
+
+</html>

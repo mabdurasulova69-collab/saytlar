@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Book</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f2f4f7;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #333;
+        }
+
+        button {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #222;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .search {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .info h3 {
+            margin-bottom: 5px;
+        }
+
+        .info p {
+            color: #666;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit {
+            background: #2563eb;
+        }
+
+        .delete {
+            background: #dc2626;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        @media (max-width: 650px) {
+            .form {
+                grid-template-columns: 1fr;
+            }
+
+            .contact {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>   
+
+<div class="container">
+
+    <h1>Contact Book</h1>
+
+    <div class="form">
+        <input type="text" id="name" placeholder="Ism">
+        <input type="text" id="phone" placeholder="Telefon raqam">
+        <button onclick="saveContact()">Qoshish</button>
+    </div>
+
+    <input
+        type="text"
+        id="search"
+        class="search"
+        placeholder="Kontakt qidirish..."
+        oninput="searchContacts()"
+    >
+
+    <div id="contactList"></div>
+
+</div>
+
+<script>
+
+    let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+
+    let editId = null;
+
+    function saveContact() {
+        const name = document.getElementById("name").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+
+        if (name === "" || phone === "") {
+            alert("Barcha maydonlarni toldiring!");
+            return;
+        }
+
+        if (editId !== null) {
+            contacts = contacts.map(contact => {
+                if (contact.id === editId) {
+                    return {
+                        id: contact.id,
+                        name: name,
+                        phone: phone
+                    };
+                }
+
+                return contact;
+            });
+
+            editId = null;
+            document.querySelector(".form button").textContent = "Qo‘shish";
+
+        } else {
+            const contact = {
+                id: Date.now(),
+                name: name,
+                phone: phone
+            };
+
+            contacts.push(contact);
+        }
+
+        localStorage.setItem("contacts", JSON.stringify(contacts));
+
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+
+        renderContacts();
+    }
+
+    function renderContacts(list = contacts) {
+
+        const contactList = document.getElementById("contactList");
+
+        contactList.innerHTML = "";
+
+        if (list.length === 0) {
+            contactList.innerHTML = `
+                <div class="empty">
+                    Kontaktlar mavjud emas
+                </div>
+            `;
+
+            return;
+        }
+
+        list.forEach(contact => {
+
+            contactList.innerHTML += `
+                <div class="contact">
+
+                    <div class="info">
+                        <h3>${contact.name}</h3>
+                        <p>${contact.phone}</p>
+                    </div>
+
+                    <div class="actions">
+                        <button class="edit" onclick="editContact(${contact.id})">
+                            Tahrirlash
+                        </button>
+
+                        <button class="delete" onclick="deleteContact(${contact.id})">
+                            O‘chirish
+                        </button>
+                    </div>
+
+                </div>
+            `;
+        });
+    }
+
+    function deleteContact(id) {
+
+        const confirmed = confirm("Bu kontaktni o‘chirmoqchimisiz?");
+
+        if (!confirmed) {
+            return;
+        }
+
+        contacts = contacts.filter(contact => contact.id !== id);
+
+        localStorage.setItem("contacts", JSON.stringify(contacts));
+
+        renderContacts();
+    }
+
+    function editContact(id) {
+
+        const contact = contacts.find(contact => contact.id === id);
+
+        if (!contact) {
+            return;
+        }
+
+        document.getElementById("name").value = contact.name;
+        document.getElementById("phone").value = contact.phone;
+
+        editId = id;
+
+        document.querySelector(".form button").textContent = "Saqlash";
+    }
+
+    function searchContacts() {
+
+        const search = document
+            .getElementById("search")
+            .value
+            .toLowerCase();
+
+        const filteredContacts = contacts.filter(contact =>
+            contact.name.toLowerCase().includes(search) ||
+            contact.phone.includes(search)
+        );
+
+        renderContacts(filteredContacts);
+    }
+
+    renderContacts();
+
+</script>
+
+</body>
+</html>

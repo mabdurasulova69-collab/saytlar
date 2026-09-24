@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #667eea;
+            font-family: Arial, sans-serif;
+        }
+
+        .timer {
+            width: 500px;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .time {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .box {
+            background: #222;
+            color: white;
+            padding: 20px 15px;
+            border-radius: 10px;
+            min-width: 90px;
+        }
+
+        .box span {
+            display: block;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .box small {
+            color: #aaa;
+        }
+
+        #message {
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 550px) {
+            .timer {
+                width: 90%;
+                padding: 25px 15px;
+            }
+
+            .time {
+                gap: 5px;
+            }
+
+            .box {
+                min-width: 65px;
+                padding: 15px 5px;
+            }
+
+            .box span {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="timer">
+
+    <h1>🎂 Tug'ilgan kungacha</h1>
+
+    <div class="time">
+
+        <div class="box">
+            <span id="days">00</span>
+            <small>Kun</small>
+        </div>
+
+        <div class="box">
+            <span id="hours">00</span>
+            <small>Soat</small>
+        </div>
+
+        <div class="box">
+            <span id="minutes">00</span>
+            <small>Daqiqa</small>
+        </div>
+
+        <div class="box">
+            <span id="seconds">00</span>
+            <small>Soniya</small>
+        </div>
+
+    </div>
+
+    <p id="message"></p>
+
+</div>
+
+<script>
+
+    const deadline = new Date("2026-12-31 00:00:00").getTime();
+
+    function countdown() {
+
+        const now = new Date().getTime();
+
+        const difference = deadline - now;
+
+        if (difference <= 0) {
+
+            document.getElementById("days").textContent = "00";
+            document.getElementById("hours").textContent = "00";
+            document.getElementById("minutes").textContent = "00";
+            document.getElementById("seconds").textContent = "00";
+
+            document.getElementById("message").textContent =
+                "🎉 Vaqt tugadi!";
+
+            clearInterval(timer);
+
+            return;
+        }
+
+        const days = Math.floor(
+            difference / (1000 * 60 * 60 * 24)
+        );
+
+        const hours = Math.floor(
+            (difference / (1000 * 60 * 60)) % 24
+        );
+
+        const minutes = Math.floor(
+            (difference / (1000 * 60)) % 60
+        );
+
+        const seconds = Math.floor(
+            (difference / 1000) % 60
+        );
+
+        document.getElementById("days").textContent =
+            String(days).padStart(2, "0");
+
+        document.getElementById("hours").textContent =
+            String(hours).padStart(2, "0");
+
+        document.getElementById("minutes").textContent =
+            String(minutes).padStart(2, "0");
+
+        document.getElementById("seconds").textContent =
+            String(seconds).padStart(2, "0");
+    }
+
+    countdown();
+
+    const timer = setInterval(countdown, 1000);
+
+</script>
+
+</body>
+</html>

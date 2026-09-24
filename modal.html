@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Oyna</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f1f5f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .card {
+            width: 350px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .open-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .open-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 450px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            position: relative;
+            animation: showModal 0.3s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            border: none;
+            background: none;
+            font-size: 30px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .close-btn:hover {
+            color: red;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        @keyframes showModal {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Laravel kursi</h2>
+
+        <p>
+            Laravel haqida ko'proq ma'lumot olish uchun
+            quyidagi tugmani bosing.
+        </p>
+
+        <button class="open-btn" id="openModal">
+            Batafsil
+        </button>
+    </div>
+
+    <div class="modal" id="modal">
+
+        <div class="modal-content">
+
+            <button class="close-btn" id="closeModal">
+                ×
+            </button>
+
+            <h2>Laravel haqida</h2>
+
+            <p>
+                Laravel — PHP dasturlash tilida yozilgan zamonaviy
+                web framework. U routing, database, authentication,
+                validation va CRUD kabi vazifalarni osonlashtiradi.
+            </p>
+
+        </div>
+
+    </div>
+
+    <script>
+        const openModal = document.getElementById("openModal");
+        const closeModal = document.getElementById("closeModal");
+        const modal = document.getElementById("modal");
+
+        openModal.addEventListener("click", function() {
+            modal.classList.add("active");
+        });
+
+        closeModal.addEventListener("click", function() {
+            modal.classList.remove("active");
+        });
+
+        modal.addEventListener("click", function(event) {
+            if (event.target === modal) {
+                modal.classList.remove("active");
+            }
+        });
+    </script>
+
+</body>
+</html>

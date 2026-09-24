@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Calculator</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f1f5f9;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            width: 450px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .subject {
+            margin-bottom: 15px;
+        }
+
+        .subject label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .subject input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .subject input:focus {
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .result p {
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        .final {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .error {
+            margin-top: 15px;
+            color: #dc2626;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Student Grade Calculator</h1>
+
+        <div class="subject">
+            <label>Matematika</label>
+            <input type="number" id="math" placeholder="0 - 100" min="0" max="100">
+        </div>
+
+        <div class="subject">
+            <label>Ingliz tili</label>
+            <input type="number" id="english" placeholder="0 - 100" min="0" max="100">
+        </div>
+
+        <div class="subject">
+            <label>Informatika</label>
+            <input type="number" id="computer" placeholder="0 - 100" min="0" max="100">
+        </div>
+
+        <div class="subject">
+            <label>Fizika</label>
+            <input type="number" id="physics" placeholder="0 - 100" min="0" max="100">
+        </div>
+
+        <div class="subject">
+            <label>Tarix</label>
+            <input type="number" id="history" placeholder="0 - 100" min="0" max="100">
+        </div>
+
+        <button onclick="calculateResult()">
+            Hisoblash
+        </button>
+
+        <p class="error" id="error"></p>
+
+        <div class="result" id="result">
+
+            <p>
+                Ortacha baho:
+                <strong id="average"></strong>
+            </p>
+
+            <p>
+                Foiz:
+                <strong id="percentage"></strong>
+            </p>
+
+            <p class="final">
+                Yakuniy natija:
+                <span id="finalResult"></span>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script>
+        function getGrades() {
+            return [
+                Number(document.getElementById("math").value),
+                Number(document.getElementById("english").value),
+                Number(document.getElementById("computer").value),
+                Number(document.getElementById("physics").value),
+                Number(document.getElementById("history").value)
+            ];
+        }
+
+        function validateGrades(grades) {
+            for (let grade of grades) {
+                if (grade < 0 || grade > 100) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function getFinalResult(percentage) {
+            if (percentage >= 90) {
+                return "A — A'lo";
+            }
+
+            if (percentage >= 80) {
+                return "B — Yaxshi";
+            }
+
+            if (percentage >= 70) {
+                return "C — Qoniqarli";
+            }
+
+            if (percentage >= 60) {
+                return "D — Otish";
+            }
+
+            return "F — Yiqildi";
+        }
+
+        function calculateResult() {
+            const grades = getGrades();
+            const error = document.getElementById("error");
+            const result = document.getElementById("result");
+
+            error.textContent = "";
+            result.style.display = "none";
+
+            if (grades.some(grade => grade === 0)) {
+                error.textContent =
+                    "Barcha fanlarga baho kiriting!";
+                return;
+            }
+
+            if (!validateGrades(grades)) {
+                error.textContent =
+                    "Baholar 0 dan 100 gacha bo‘lishi kerak!";
+                return;
+            }
+
+            const total = grades.reduce(
+                (sum, grade) => sum + grade,
+                0
+            );
+
+            const average = total / grades.length;
+
+            const percentage = total / (grades.length * 100) * 100;
+
+            const finalResult = getFinalResult(percentage);
+
+            document.getElementById("average").textContent =
+                average.toFixed(2);
+
+            document.getElementById("percentage").textContent =
+                percentage.toFixed(2) + "%";
+
+            document.getElementById("finalResult").textContent =
+                finalResult;
+
+            result.style.display = "block";
+        }
+    </script>
+
+</body>
+
+</html>

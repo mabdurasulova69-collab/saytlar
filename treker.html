@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daromad va Xarajatlar</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .balance {
+            background: #2563eb;
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .balance h2 {
+            margin-top: 10px;
+            font-size: 32px;
+        }
+
+        .form {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .transactions {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .income {
+            border-left: 5px solid #22c55e;
+        }
+
+        .expense {
+            border-left: 5px solid #ef4444;
+        }
+
+        .transaction-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .transaction-info p {
+            color: #666;
+        }
+
+        .amount {
+            font-weight: bold;
+        }
+
+        .income .amount {
+            color: #22c55e;
+        }
+
+        .expense .amount {
+            color: #ef4444;
+        }
+
+        .delete-btn {
+            width: auto;
+            margin: 0 0 0 15px;
+            padding: 8px 12px;
+            background: #ef4444;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Daromad va Xarajatlar</h1>
+
+        <div class="balance">
+            <p>Umumiy balans</p>
+            <h2 id="balance">0 so'm</h2>
+        </div>
+
+        <div class="form">
+
+            <input
+                type="text"
+                id="description"
+                placeholder="Masalan: Oylik maosh"
+            >
+
+            <input
+                type="number"
+                id="amount"
+                placeholder="Summa"
+            >
+
+            <select id="type">
+                <option value="income">Daromad</option>
+                <option value="expense">Xarajat</option>
+            </select>
+
+            <button onclick="addTransaction()">
+                Qo'shish
+            </button>
+
+        </div>
+
+        <div class="transactions">
+            <h2>Yozuvlar</h2>
+
+            <div id="transactionList"></div>
+        </div>
+
+    </div>
+
+    <script>
+        let transactions =
+            JSON.parse(localStorage.getItem("transactions")) || [];
+
+        const description = document.getElementById("description");
+        const amount = document.getElementById("amount");
+        const type = document.getElementById("type");
+        const transactionList =
+            document.getElementById("transactionList");
+        const balance = document.getElementById("balance");
+
+        function addTransaction() {
+            const transactionDescription = description.value.trim();
+            const transactionAmount = Number(amount.value);
+            const transactionType = type.value;
+
+            if (
+                transactionDescription === "" ||
+                transactionAmount <= 0
+            ) {
+                alert("Ma'lumotlarni to'g'ri kiriting!");
+                return;
+            }
+
+            const transaction = {
+                id: Date.now(),
+                description: transactionDescription,
+                amount: transactionAmount,
+                type: transactionType
+            };
+
+            transactions.push(transaction);
+
+            saveTransactions();
+            renderTransactions();
+
+            description.value = "";
+            amount.value = "";
+        }
+
+        function deleteTransaction(id) {
+            transactions = transactions.filter(
+                transaction => transaction.id !== id
+            );
+
+            saveTransactions();
+            renderTransactions();
+        }
+
+        function saveTransactions() {
+            localStorage.setItem(
+                "transactions",
+                JSON.stringify(transactions)
+            );
+        }
+
+        function renderTransactions() {
+            transactionList.innerHTML = "";
+
+            if (transactions.length === 0) {
+                transactionList.innerHTML =
+                    '<p class="empty">Hozircha yozuvlar yo‘q</p>';
+            }
+
+            transactions.forEach(transaction => {
+
+                const sign =
+                    transaction.type === "income" ? "+" : "-";
+
+                transactionList.innerHTML += `
+                    <div class="transaction ${transaction.type}">
+
+                        <div class="transaction-info">
+                            <h3>${transaction.description}</h3>
+                            <p>
+                                ${sign}${transaction.amount.toLocaleString()} so'm
+                            </p>
+                        </div>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteTransaction(${transaction.id})"
+                        >
+                            O'chirish
+                        </button>
+
+                    </div>
+                `;
+            });
+
+            calculateBalance();
+        }
+
+        function calculateBalance() {
+            let total = 0;
+
+            transactions.forEach(transaction => {
+
+                if (transaction.type === "income") {
+                    total += transaction.amount;
+                } else {
+                    total -= transaction.amount;
+                }
+
+            });
+
+            balance.textContent =
+                total.toLocaleString() + " so'm";
+        }
+
+        renderTransactions();
+    </script>
+
+</body>
+</html>

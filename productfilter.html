@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Filter</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 12px 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .products {
+            max-width: 1100px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product h2 {
+            margin-bottom: 10px;
+        }
+
+        .category {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: #2563eb;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 800px) {
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Mahsulotlar</h1>
+
+    <div class="filters">
+
+        <select id="categoryFilter">
+            <option value="all">Barcha kategoriyalar</option>
+            <option value="phone">Telefon</option>
+            <option value="laptop">Noutbuk</option>
+            <option value="watch">Soat</option>
+        </select>
+
+        <select id="priceFilter">
+            <option value="all">Barcha narxlar</option>
+            <option value="cheap">1 000 000 gacha</option>
+            <option value="medium">1 000 000 - 5 000 000</option>
+            <option value="expensive">5 000 000 dan yuqori</option>
+        </select>
+
+    </div>
+
+    <div class="products" id="products"></div>
+
+    <script>
+        const products = [
+            {
+                name: "iPhone 15",
+                category: "phone",
+                price: 9000000,
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEUxcoXWbNzGbwNv9svLZsHL7Q57ydqM9t_QR_BrWEEg&s"
+            },
+            {
+                name: "Samsung Galaxy",
+                category: "phone",
+                price: 4500000,
+                image: "https://asset.openshop.uz/uploads/products/photos/202603/qTHmh1kjl6VBXv36az7puT5P42WKtOwo.jpg"
+            },
+            {
+                name: "MacBook Air",
+                category: "laptop",
+                price: 15000000,
+                image: "https://cdn.asaxiy.uz/asaxiy-content/product/items/desktop/28fbe64e9ac300992dadbb7f9ae2219a2025012519165975042eEDU2h55VW.webp"
+            },
+            {
+                name: "Lenovo Laptop",
+                category: "laptop",
+                price: 5000000,
+                image: "https://technochain.uz/api/app/project_files/product_img/2d1932e0-Lenovo%20Legion%205%2015IAX10%20(1).avif"
+            },
+            {
+                name: "Smart Watch",
+                category: "watch",
+                price: 800000,
+                image: "https://minapi.beemarket.uz/prod-media/productImages/1734725570iypHtKRoaIVk.webp"
+            },
+            {
+                name: "Apple Watch",
+                category: "watch",
+                price: 3500000,
+                image: "https://cdn.asaxiy.uz/asaxiy-content/product/items/desktop/ac627ab1ccbdb62ec96e702f07f6425b2025093014442689378jPEMkuQWUg.jpg.webp"
+            }
+        ];
+
+        const productsContainer = document.getElementById("products");
+        const categoryFilter = document.getElementById("categoryFilter");
+        const priceFilter = document.getElementById("priceFilter");
+
+        function renderProducts(productsArray) {
+            productsContainer.innerHTML = "";
+
+            productsArray.forEach(product => {
+                productsContainer.innerHTML += `
+                    <div class="product">
+                        <img src="${product.image}" alt="${product.name}">
+                        <h2>${product.name}</h2>
+                        <p class="category">${product.category}</p>
+                        <p class="price">${product.price.toLocaleString()} so'm</p>
+                    </div>
+                `;
+            });
+        }
+
+        function filterProducts() {
+            const category = categoryFilter.value;
+            const price = priceFilter.value;
+
+            const filteredProducts = products.filter(product => {
+
+                let categoryMatch =
+                    category === "all" ||
+                    product.category === category;
+
+                let priceMatch = true;
+
+                if (price === "cheap") {
+                    priceMatch = product.price <= 1000000;
+                }
+
+                if (price === "medium") {
+                    priceMatch =
+                        product.price > 1000000 &&
+                        product.price <= 5000000;
+                }
+
+                if (price === "expensive") {
+                    priceMatch = product.price > 5000000;
+                }
+
+                return categoryMatch && priceMatch;
+            });
+
+            renderProducts(filteredProducts);
+        }
+
+        categoryFilter.addEventListener("change", filterProducts);
+        priceFilter.addEventListener("change", filterProducts);
+
+        renderProducts(products);
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator {
+            width: 350px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            font-size: 18px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4f63d2;
+        }
+
+        .clear {
+            background: red;
+            grid-column: span 2;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <h1>Calculator</h1>
+
+    <input type="number" id="number1" placeholder="1-son">
+    <input type="number" id="number2" placeholder="2-son">
+
+    <div class="buttons">
+        <button onclick="add()">+</button>
+        <button onclick="subtract()">−</button>
+        <button onclick="multiply()">×</button>
+        <button onclick="divide()">÷</button>
+        <button class="clear" onclick="clearCalculator()">Tozalash</button>
+    </div>
+
+    <div id="result">Natija: 0</div>
+
+</div>
+
+<script>
+
+    function add() {
+        let a = Number(document.getElementById("number1").value);
+        let b = Number(document.getElementById("number2").value);
+
+        document.getElementById("result").textContent = "Natija: " + (a + b);
+    }
+
+    function subtract() {
+        let a = Number(document.getElementById("number1").value);
+        let b = Number(document.getElementById("number2").value);
+
+        document.getElementById("result").textContent = "Natija: " + (a - b);
+    }
+
+    function multiply() {
+        let a = Number(document.getElementById("number1").value);
+        let b = Number(document.getElementById("number2").value);
+
+        document.getElementById("result").textContent = "Natija: " + (a * b);
+    }
+
+    function divide() {
+        let a = Number(document.getElementById("number1").value);
+        let b = Number(document.getElementById("number2").value);
+
+        if (b === 0) {
+            document.getElementById("result").textContent = "0 ga bo'lish mumkin emas!";
+            return;
+        }
+
+        document.getElementById("result").textContent = "Natija: " + (a / b);
+    }
+
+    function clearCalculator() {
+        document.getElementById("number1").value = "";
+        document.getElementById("number2").value = "";
+        document.getElementById("result").textContent = "Natija: 0";
+    }
+
+</script>
+
+</body>
+</html>
